@@ -13,7 +13,7 @@ Lista de exercícios com problemas a serem resolvidos utilizando a linguagem fun
 
 ## Desafios
 1) Quicksort
-2) Problena do Corte de Estoque
+2) Problema do Corte de Estoque
 
 _Esses desafios terão três resoluções distintas:_
 - Em Haskell
