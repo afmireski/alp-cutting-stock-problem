@@ -10,63 +10,63 @@
 type Barra = { n: number; l: number };
 type AtendeDemandaResponse = { estoque: number[]; pedidosAtendidos: number };
 
-function atendeDemanda(l: number, estoque: number[], demandas: Barra[]): AtendeDemandaResponse {
+function atendeDemanda(
+  l: number,
+  estoque: number[],
+  demandas: Barra[]
+): AtendeDemandaResponse {
   let i = 0;
   let j = 0;
   let pedidosAtendidos = 0;
   let cutL = 0;
   while (cutL < l && i < estoque.length) {
     let { n: nDemanda, l: lDemanda } = demandas[j];
-    if (lDemanda + cutL <= l) {
-      cutL += lDemanda;
-      demandas[j].n--;
-      pedidosAtendidos++;
 
-      if (cutL == l) {
-        // Acabou com o estoque
-        estoque[i] -= cutL;
-        i++;
-        cutL = 0;
-      }
-    } else {
-      let betterCut = lDemanda + cutL;
-      let betterK = j;
-
-      // Busca por alguma outra demanda que não extrapole o tamanho do corte
-      for (let k = j; k < demandas.length; k++) {
-        let cut = demandas[k].l + cutL;
-        if (cut > betterCut && cut <= l) {
-          betterCut = cut;
-          betterK = k;
-          if (cut == l) break; // A demanda liquida aquele item do estoque
-        }
-      }
-
-      if (betterCut <= l) {
-        // Encontrou alguma demanda que proporciona um aproveitamento melhor
-        estoque[i] -= betterCut;
-        demandas[betterK].n--;
+    if (nDemanda > 0) {
+      if (lDemanda + cutL <= l) {
+        cutL += lDemanda;
+        demandas[j].n--;
         pedidosAtendidos++;
 
-        if (estoque[i] == 0) {
+        if (cutL == l) {
+          // Acabou com o estoque
+          estoque[i] -= cutL;
           i++;
           cutL = 0;
         }
       } else {
-        // Não encontrou nenhuma demanda que proporcione um corte melhor
-        i++;
-        cutL = 0;
+        let betterCut = lDemanda + cutL;
+        let betterK = j;
+
+        // Busca por alguma outra demanda que não extrapole o tamanho do corte
+        for (let k = j; k < demandas.length; k++) {
+          let cut = demandas[k].l + cutL;
+          if (cut > betterCut && cut <= l) {
+            betterCut = cut;
+            betterK = k;
+            if (cut == l) break; // A demanda liquida aquele item do estoque
+          }
+        }
+
+        if (betterCut <= l) {
+          // Encontrou alguma demanda que proporciona um aproveitamento melhor
+          estoque[i] -= betterCut;
+          demandas[betterK].n--;
+          pedidosAtendidos++;
+
+          if (estoque[i] == 0) {
+            i++;
+            cutL = 0;
+          }
+        } else {
+          // Não encontrou nenhuma demanda que proporcione um corte melhor
+          i++;
+          cutL = 0;
+        }
       }
 
       if (demandas[j].n == 0) j++;
     }
-    // if (estoque[i] >= lDemanda) {
-    //   estoque[i] -= lDemanda;
-    //   nDemanda--;
-    //   pedidosAtendidos++;
-    // } else {
-    //   i++;
-    // }
   }
   return { estoque, pedidosAtendidos };
 }
@@ -74,7 +74,7 @@ function atendeDemanda(l: number, estoque: number[], demandas: Barra[]): AtendeD
 function cutStock(n: number, l: number, demandas: Barra[]) {
   let pedidos = 0;
   demandas.sort(function (a, b) {
-    return a.l - b.l;
+    return a.l + b.l;
   });
 
   let estoque: number[] = [];
