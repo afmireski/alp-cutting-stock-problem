@@ -19,7 +19,7 @@ function atendeDemanda(
   let j = 0;
   let pedidosAtendidos = 0;
   let cutL = 0;
-  while (cutL < l && i < estoque.length) {
+  while (cutL < l && i < estoque.length && j < demandas.length) {
     let { n: nDemanda, l: lDemanda } = demandas[j];
 
     if (nDemanda > 0) {
@@ -60,6 +60,7 @@ function atendeDemanda(
           }
         } else {
           // Não encontrou nenhuma demanda que proporcione um corte melhor
+          estoque[i] -= cutL;
           i++;
           cutL = 0;
         }
@@ -68,6 +69,7 @@ function atendeDemanda(
       if (demandas[j].n == 0) j++;
     }
   }
+
   return { estoque, pedidosAtendidos };
 }
 
@@ -82,17 +84,13 @@ function cutStock(n: number, l: number, demandas: Barra[]) {
     estoque.push(l);
   }
 
-  for (let i = 0; i < demandas.length; i++) {
-    const { estoque: newEstoque, pedidosAtendidos } = atendeDemanda(
-      l,
-      estoque,
-      demandas
-    );
-    estoque = newEstoque;
-    pedidos += pedidosAtendidos;
-  }
+  const { estoque: newEstoque, pedidosAtendidos } = atendeDemanda(
+    l,
+    estoque,
+    demandas
+  );
 
-  return { pedidosAtendidos: pedidos, estoque };
+  return { pedidosAtendidos, estoque: newEstoque };
 }
 
 export function main() {
