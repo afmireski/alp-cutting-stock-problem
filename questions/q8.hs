@@ -9,5 +9,3 @@ listInterception l1 l2 tmp
  | head l1 /= head l2 && null tmp = listInterception l1 (tail l2) l2
  | head l1 /= head l2 && not (null tmp) = listInterception l1 (tail l2) tmp
  | otherwise = head l1 : listInterception (tail l1) (tail l2) tmp
-
-
