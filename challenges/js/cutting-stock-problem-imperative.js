@@ -7,25 +7,18 @@
 // estoque com um comprimento fixo. O desafio será encontrar a combinação ideal de
 // cortes para atender a todos os pedidos, maximizando o número de pedidos atendidos.
 
-type Barra = { n: number; l: number };
-type AtendeDemandaResponse = { estoque: number[]; pedidosAtendidos: number };
-
-function atendeDemanda(
-  l: number,
-  estoque: number[],
-  demandas: Barra[]
-): AtendeDemandaResponse {
+function atendeDemanda(l, estoque, demandas) {
   let i = 0;
   let j = 0;
   let pedidosAtendidos = 0;
   let cutL = 0;
   while (cutL < l && i < estoque.length && j < demandas.length) {
-    let { n: nDemanda, l: lDemanda } = demandas[j];
+    let lDemanda = demandas[j];
 
-    if (nDemanda > 0) {
+    if (lDemanda > 0) {
       if (lDemanda + cutL <= l) {
         cutL += lDemanda;
-        demandas[j].n--;
+        demandas[j] = 0;
         pedidosAtendidos++;
 
         if (cutL == l) {
@@ -40,7 +33,7 @@ function atendeDemanda(
 
         // Busca por alguma outra demanda que não extrapole o tamanho do corte
         for (let k = j; k < demandas.length; k++) {
-          let cut = demandas[k].l + cutL;
+          let cut = demandas[k] + cutL;
           if (cut > betterCut && cut <= l) {
             betterCut = cut;
             betterK = k;
@@ -51,7 +44,7 @@ function atendeDemanda(
         if (betterCut <= l) {
           // Encontrou alguma demanda que proporciona um aproveitamento melhor
           estoque[i] -= betterCut;
-          demandas[betterK].n--;
+          demandas[betterK] = 0;
           pedidosAtendidos++;
 
           if (estoque[i] == 0) {
@@ -66,20 +59,19 @@ function atendeDemanda(
         }
       }
 
-      if (demandas[j].n == 0) j++;
+      if (demandas[j] == 0) j++;
     }
   }
 
   return { estoque, pedidosAtendidos };
 }
 
-function cutStock(n: number, l: number, demandas: Barra[]) {
-  let pedidos = 0;
+function cutStock(n, l, demandas) {
   demandas.sort(function (a, b) {
-    return a.l + b.l;
+    return a + b;
   });
 
-  let estoque: number[] = [];
+  let estoque = [];
   for (let i = 0; i < n; i++) {
     estoque.push(l);
   }
@@ -93,35 +85,10 @@ function cutStock(n: number, l: number, demandas: Barra[]) {
   return { pedidosAtendidos, estoque: newEstoque };
 }
 
-export function main() {
+function main() {
   const l = 10;
   const n = 10;
-  const demandas: Barra[] = [
-    {
-      n: 5,
-      l: 1,
-    },
-    {
-      n: 3,
-      l: 8,
-    },
-    {
-      n: 1,
-      l: 10,
-    },
-    {
-      n: 3,
-      l: 7,
-    },
-    {
-      n: 3,
-      l: 2,
-    },
-    {
-      n: 1,
-      l: 5,
-    },
-  ];
+  const demandas = [1, 1, 1, 1, 1, 8, 8, 8, 10, 7, 7, 7, 2, 2, 5];
   const { pedidosAtendidos: pedidos, estoque } = cutStock(n, l, demandas);
   console.log(
     `O total de pedidos atendidos foi ${pedidos} e o estoque restante é ${estoque}`
