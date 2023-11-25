@@ -7,6 +7,19 @@
 // estoque com um comprimento fixo. O desafio será encontrar a combinação ideal de
 // cortes para atender a todos os pedidos, maximizando o número de pedidos atendidos.
 
+const { join } = require("path");
+
+const lerEntrada = (path) => {
+  const fs = require("fs");
+  try {
+    const data = fs.readFileSync(path, { encoding: "utf8" });
+    return JSON.parse(data);
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+
 const atendeDemanda = (l, estoque, demandas) => {
   let i = 0;
   let j = 0;
@@ -75,14 +88,9 @@ const atendeDemanda = (l, estoque, demandas) => {
   return { estoque, pedidosAtendidos };
 };
 
-const cutStock = (n, l, demandas) => {
-  demandas.sort((a, b) => a + b);
-
-  let estoque = [];
-  for (let i = 0; i < n; i++) estoque.push(l);
-
+const cutStock = (estoque, demandas) => {
   const { estoque: newEstoque, pedidosAtendidos } = atendeDemanda(
-    l,
+    estoque[0],
     estoque,
     demandas
   );
@@ -91,13 +99,16 @@ const cutStock = (n, l, demandas) => {
 };
 
 const main = () => {
-  const l = 10;
-  const n = 10;
-  const demandas = [1, 1, 1, 1, 1, 8, 8, 8, 10, 7, 7, 7, 2, 2, 5];
-  const { pedidosAtendidos: pedidos, estoque } = cutStock(n, l, demandas);
-  console.log(
-    `O total de pedidos atendidos foi ${pedidos} e o estoque restante é ${estoque}`
+  const { estoque, demandas } = lerEntrada(
+    join(__dirname, 'in.json')
   );
+  // console.log("Estoque -> ", estoque);
+  // console.log("Demandas -> ", demandas);
+
+  const { pedidosAtendidos: pedidos, estoque: estoqueFinal } = cutStock(estoque, demandas);
+  // console.log(
+  //   `O total de pedidos atendidos foi ${pedidos} e o estoque restante é ${estoqueFinal}`
+  // );
 };
 
 main();
