@@ -97,7 +97,7 @@ function main() {
 
   const { pedidosAtendidos: pedidos, estoque: estoqueFinal } = cutStock(estoque, demandas);
   console.log(
-    `O total de pedidos atendidos foi ${pedidos} e o estoque restante é ${estoqueFinal}`
+    `O total de pedidos atendidos foi ${pedidos}`
   );
 }
 

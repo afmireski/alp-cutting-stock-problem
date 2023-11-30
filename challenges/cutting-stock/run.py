@@ -24,6 +24,13 @@ def generate_fixed_vector(length, value):
 workdir = os.getcwd()
 programs = [
     {
+        'script': 'cutting-stock-problem',
+        'extension': 'hs',
+        'lang': 'haskell',
+        'runner': 'runghc',
+        'input_ext': '.txt'
+    },
+    {
         'script': 'cutting-stock-problem-functionally',
         'lang': 'javascript',
         'extension': 'js',
@@ -36,21 +43,14 @@ programs = [
         'extension': 'js',
         'runner': 'node',
         'input_ext': '.json'
-    },
-    {
-        'script': 'cutting-stock-problem',
-        'extension': 'hs',
-        'lang': 'haskell',
-        'runner': 'runghc',
-        'input_ext': '.txt'
     }
 ]
 
 path = f'{workdir}/challenges/cutting-stock'
 
 
-l = 10
-n = 20;
+l = 100
+n = 200000;
 data = {
     'l': l,
     'estoque': generate_fixed_vector(n, l),
