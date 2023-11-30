@@ -27,25 +27,27 @@ programs = [
         'script': 'cutting-stock-problem-functionally',
         'lang': 'javascript',
         'extension': 'js',
-        'runner': 'node'
+        'runner': 'node',
+        'input_ext': '.json'
     },
     {
         'script': 'cutting-stock-problem-imperative',
         'lang': 'javascript',
         'extension': 'js',
-        'runner': 'node'
+        'runner': 'node',
+        'input_ext': '.json'
     },
-    # {
-    #     'script': 'cutting-stock-problem',
-    #     'extension': 'hs',
-    #     'lang': 'haskell',
-    #     'runner': 'runghc'
-    # }
+    {
+        'script': 'cutting-stock-problem',
+        'extension': 'hs',
+        'lang': 'haskell',
+        'runner': 'runghc',
+        'input_ext': '.txt'
+    }
 ]
 
 path = f'{workdir}/challenges/cutting-stock'
 
-input_path = f'{path}/input/in.json'
 
 l = 10
 n = 20;
@@ -58,9 +60,24 @@ data = {
 
 
 for e in programs:
-    input_path = f'{path}/{e["lang"]}/in.json'
-    with open(input_path, 'w') as in_json:
-        json.dump(data, in_json)
+    input_path = f'{path}/{e["lang"]}/in{e["input_ext"]}'
+    with open(input_path, 'w') as in_file:
+        if (e['input_ext'] == '.txt'):
+            estoque = ''
+            for n in data['estoque']:
+                estoque+=f'{n} '
+            estoque.strip()
+            estoque+='\n'
+
+            demandas = ''
+            for n in data['demandas']:
+                demandas+=f'{n} '
+            demandas.strip()
+            demandas+='\n'
+            in_file.writelines([estoque, demandas])
+            
+        else:
+            json.dump(data, in_file)
     print(e)
     script = f'{path}/{e["lang"]}/{e["script"]}.{e["extension"]}'
     run_script([e["runner"], script], e["lang"])

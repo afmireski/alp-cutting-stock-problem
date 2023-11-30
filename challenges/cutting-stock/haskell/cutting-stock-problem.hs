@@ -6,13 +6,69 @@
 -- você pode considerar que existem N pedidos de diferentes comprimentos e barras de
 -- estoque com um comprimento fixo. O desafio será encontrar a combinação ideal de
 -- cortes para atender a todos os pedidos, maximizando o número de pedidos atendidos.
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE ImportQualifiedPost #-}
 
-estoque l = [ l | x <- [1..n]] 
-resultados = []
+import Data.List (maximumBy, sortBy)
+import Data.Ord (comparing)
+import Data.Text qualified as T
+import Data.Text.IO qualified as TIO
+import System.Directory
 
-atendeDemanda estoque demanda i = sum(estoque) >= demanda !! i
+-- Função para converter uma linha de texto em um vetor de inteiros
+linhaParaVetor :: T.Text -> [Int]
+linhaParaVetor linha = map (read . T.unpack) $ T.words linha
 
-cutStock:: Int -> Int -> [Int]
-cutStock n l pedidos =
- | atendeDemanda estoque(l) pedidos=   
- 
+-- Função para ler um arquivo de texto e converter seu conteúdo para um vetor de inteiros
+lerArquivo :: FilePath -> IO [[Int]]
+lerArquivo caminhoDoArquivo = do
+  conteudo <- TIO.readFile caminhoDoArquivo
+  return (map linhaParaVetor (T.lines conteudo))
+
+type Estoque = [Int]
+
+type Demandas = [Int]
+
+-- Função para atender a demanda para um corte específico
+atendeDemanda :: Int -> Demandas -> Int
+atendeDemanda l demandas =
+  atendeDemanda' l 0 demandas 0
+  where
+    atendeDemanda' :: Int -> Int -> Demandas -> Int -> Int
+    atendeDemanda' l cutL [] atendidos = atendidos
+    atendeDemanda' l cutL (d : dems) atendidos
+      | cut == l = atendeDemanda' l 0 dems (atendidos + 1)
+      | cut < l = atendeDemanda' l cut dems (atendidos + 1)
+      | otherwise = do
+          let (betterCut, newDems) = encontraMelhorCorte cutL (l - cutL) dems
+          atendeDemanda' l betterCut newDems (atendidos + 1)
+      where
+        cut = cutL + d
+
+    encontraMelhorCorte :: Int -> Int -> Demandas -> (Int, Demandas)
+    encontraMelhorCorte cutL delta dems
+      | null list = (cutL, dems)
+      | otherwise = (cutL + m, (removeDemanda m dems))
+      where
+        list = takeWhile (<= delta) dems
+        m = maximum list
+    removeDemanda :: Int -> Demandas -> Demandas
+    removeDemanda _ [] = []
+    removeDemanda d (di : dems)
+      | d == di = dems
+      | otherwise = di : removeDemanda d dems
+
+-- Função para realizar o corte de estoque
+cutStock :: Estoque -> Demandas -> Int
+cutStock (l: es) demandas = atendeDemanda l demandas
+
+main :: IO ()
+main = do
+  diretorioAtual <- getCurrentDirectory
+  let caminhoDoArquivo = diretorioAtual ++ "/challenges/cutting-stock/haskell/in.txt"
+  vetorDeInteiros <- lerArquivo caminhoDoArquivo
+  let estoque = head vetorDeInteiros
+  let demandas = head (tail vetorDeInteiros)
+
+  let result = cutStock estoque demandas
+  putStrLn $ "O resultado é:" ++ show result
