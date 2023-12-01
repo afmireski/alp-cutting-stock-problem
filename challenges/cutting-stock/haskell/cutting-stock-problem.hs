@@ -39,19 +39,18 @@ atendeDemanda l demandas =
     atendeDemanda' l cutL (d : dems) atendidos
       | cut == l = atendeDemanda' l 0 dems (atendidos + 1)
       | cut < l = atendeDemanda' l cut dems (atendidos + 1)
-      | otherwise = do
-          let (betterCut, newDems) = encontraMelhorCorte cutL (l - cutL) dems
-          atendeDemanda' l betterCut newDems (atendidos + 1)
+      | otherwise = encontraMelhorCorte l cutL (d : dems) atendidos
       where
         cut = cutL + d
 
-    encontraMelhorCorte :: Int -> Int -> Demandas -> (Int, Demandas)
-    encontraMelhorCorte cutL delta dems
-      | null list = (cutL, dems)
-      | otherwise = (cutL + m, (removeDemanda m dems))
+    encontraMelhorCorte :: Int -> Int -> Demandas -> Int -> Int
+    encontraMelhorCorte l cutL dems atendidos
+      | null list = atendeDemanda' l 0 dems atendidos -- Não achou nada, então zera o cutL e prossegue para o próximo
+      | otherwise = atendeDemanda' l (cutL + m) (removeDemanda m dems) (atendidos +1)
       where
-        list = dropWhile (> delta) dems
-        m = maximum list
+        delta = l - cutL
+        list = takeWhile (<= delta) dems
+        m = if null list then 0 else maximum list
     removeDemanda :: Int -> Demandas -> Demandas
     removeDemanda _ [] = []
     removeDemanda d (di : dems)
