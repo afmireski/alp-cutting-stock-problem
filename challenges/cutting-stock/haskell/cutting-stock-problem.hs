@@ -9,7 +9,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE ImportQualifiedPost #-}
 
-import Data.List (maximumBy, sortBy)
+import Data.List (maximumBy, sortOn)
 import Data.Ord (comparing)
 import Data.Text qualified as T
 import Data.Text.IO qualified as TIO
@@ -50,7 +50,7 @@ atendeDemanda l demandas =
       | null list = (cutL, dems)
       | otherwise = (cutL + m, (removeDemanda m dems))
       where
-        list = takeWhile (<= delta) dems
+        list = dropWhile (> delta) dems
         m = maximum list
     removeDemanda :: Int -> Demandas -> Demandas
     removeDemanda _ [] = []
@@ -68,7 +68,9 @@ main = do
   let caminhoDoArquivo = diretorioAtual ++ "/challenges/cutting-stock/haskell/in.txt"
   vetorDeInteiros <- lerArquivo caminhoDoArquivo
   let estoque = head vetorDeInteiros
-  let demandas = head (tail vetorDeInteiros)
+
+  -- Atendendo todos os maiores pedidos primeiros é para haver menos desperdício.
+  let demandas = reverse $ sortOn id (head (tail vetorDeInteiros)) 
 
   let result = cutStock estoque demandas
   putStrLn $ "O resultado é:" ++ show result

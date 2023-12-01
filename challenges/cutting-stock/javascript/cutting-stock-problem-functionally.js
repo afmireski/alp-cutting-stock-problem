@@ -17,98 +17,88 @@ const lerEntrada = (path) => {
   } catch (err) {
     console.log(err);
   }
-}
+};
 
+const atendeDemandaRecursiva = (l, demandas) => {
 
-const atendeDemanda = (l, estoque, demandas) => {
-  let i = 0;
-  let j = 0;
-  let pedidosAtendidos = 0;
-  let cutL = 0;
+  const atende = (i, cutL, pedidosAtendidos) => {
+    if (i >= demandas.length) return pedidosAtendidos;
 
-  const nextEstoque = (cut) => {
-    if (cut) cut();
-    i++;
-    cutL = 0;
-  };
-
-  const atendeuDemanda = (k, op) => {
-    op();
-    demandas[k] = 0;
-    pedidosAtendidos++;
-  };
-
-  // Busca pela primeira demanda que gere um corte melhor do que o atual
-  const buscaCorte = (lDemanda) => {
-    let betterCut = lDemanda + cutL;
-    let betterK = j;
-
-    // Busca por alguma outra demanda que não extrapole o tamanho do corte
-    for (let k = j; k < demandas.length; k++) {
-      let cut = demandas[k] + cutL;
-      if (cut > betterCut && cut <= l) {
-        betterCut = cut;
-        betterK = k;
-        if (cut == l) break; // A demanda liquida aquele item do estoque
-      }
-    }
-
-    if (betterCut <= l) {
-      // Encontrou alguma demanda que proporciona um aproveitamento melhor
-      atendeuDemanda(betterK, () => (estoque[i] -= betterCut));
-
-      if (estoque[i] == 0) {
-        nextEstoque();
-      }
+    let cut = cutL + demandas[i];
+    if (cut <= l) {
+      demandas[i] == 0;
+      pedidosAtendidos++;
+      cutL = cut;
+      i++;
     } else {
-      // Não encontrou nenhuma demanda que proporcione um corte melhor
-      nextEstoque(() => (estoque[i] -= cutL));
+      const delta = l - cutL;
+      const list = demandas.filter((e) => e > 0 && e <= delta);
+      if (list.length > 0) {
+        const max = Math.max(...list);
+        cutL += max;
+
+        const j = demandas.findIndex((e) => e === max);
+        demandas[j] = demandas[i]; // Envia o elemento que não serviu mais pra frente
+        demandas[i] = 0;
+        pedidosAtendidos++;
+        i++;
+      } else {
+        cutL = 0;
+      }
     }
+    if (cutL == l) cutL = 0;
+    return atende(i, cutL, pedidosAtendidos);
   };
 
-  while (cutL < l && i < estoque.length && j < demandas.length) {
-    let lDemanda = demandas[j];
+  return atende(0, 0, 0);
+  
+  
+};
 
-    if (lDemanda > 0) {
-      if (lDemanda + cutL <= l) {
-        atendeuDemanda(j, () => (cutL += lDemanda));
+const atendeDemanda = (l, demandas) => {
+  let pedidosAtendidos = 0;
+  let cutL = 0; 
+  let i = 0;
+  while (i < demandas.length) {
+    let cut = cutL + demandas[i];
+    if (cut <= l) {
+      demandas[i] == 0;
+      pedidosAtendidos++;
+      cutL = cut;
+      i++;
+    } else {
+      const delta = l - cutL;
+      const list = demandas.filter((e) => e > 0 && e <= delta);
+      if (list.length > 0) {
+        const max = Math.max(...list);
+        cutL += max;
 
-        if (cutL == l) {
-          // Acabou com o estoque
-          nextEstoque(() => (estoque[i] -= cutL));
-        }
+        const j = demandas.findIndex((e) => e === max);
+        demandas[j] = demandas[i]; // Envia o elemento que não serviu mais pra frente
+        demandas[i] = 0;
+        pedidosAtendidos++;
+        i++;
       } else {
-        buscaCorte(lDemanda);
+        cutL = 0;
       }
-
-      if (demandas[j] == 0) j++;
     }
+    if (cutL == l) cutL = 0;
   }
-
-  return { estoque, pedidosAtendidos };
+  return pedidosAtendidos;
 };
 
 const cutStock = (estoque, demandas) => {
-  const { estoque: newEstoque, pedidosAtendidos } = atendeDemanda(
-    estoque[0],
-    estoque,
-    demandas
-  );
+  // Atendendo todos os maiores pedidos primeiros é para haver menos desperdício.
+  demandas.sort((a, b) => b - a);
 
-  return { pedidosAtendidos, estoque: newEstoque };
+  return atendeDemanda(estoque[0], demandas);
 };
 
 const main = () => {
-  const { estoque, demandas } = lerEntrada(
-    join(__dirname, 'in.json')
-  );
-  // console.log("Estoque -> ", estoque);
-  // console.log("Demandas -> ", demandas);
+  const { estoque, demandas } = lerEntrada(join(__dirname, "in.json"));
 
-  const { pedidosAtendidos: pedidos, estoque: estoqueFinal } = cutStock(estoque, demandas);
-  console.log(
-    `O total de pedidos atendidos foi ${pedidos}`
-  );
+  const pedidos = cutStock(estoque, demandas);
+  console.log(`O total de pedidos atendidos foi ${pedidos}`);
 };
 
 main();

@@ -75,30 +75,30 @@ function atendeDemanda(l, estoque, demandas) {
     }
   }
 
-  return { estoque, pedidosAtendidos };
+  return pedidosAtendidos;
 }
 
 function cutStock(estoque, demandas) {
-  const { estoque: newEstoque, pedidosAtendidos } = atendeDemanda(
+  // Atendendo todos os maiores pedidos primeiros é para haver menos desperdício.
+  demandas.sort(function (a, b) {
+    return b - a;
+  });
+
+  return atendeDemanda(
     estoque[0],
     estoque,
     demandas
   );
-
-  return { pedidosAtendidos, estoque: newEstoque };
 }
 
 function main() {
-  const { estoque, demandas } = lerEntrada(
-    join(__dirname, 'in.json')
-  );
-  // console.log("Estoque -> ", estoque);
-  // console.log("Demandas -> ", demandas);
+  const { estoque, demandas } = lerEntrada(join(__dirname, "in.json"));
 
-  const { pedidosAtendidos: pedidos, estoque: estoqueFinal } = cutStock(estoque, demandas);
-  console.log(
-    `O total de pedidos atendidos foi ${pedidos}`
+  const pedidos = cutStock(
+    estoque,
+    demandas
   );
+  console.log(`O total de pedidos atendidos foi ${pedidos}`);
 }
 
 main();

@@ -50,7 +50,7 @@ path = f'{workdir}/challenges/cutting-stock'
 
 
 l = 100
-n = 200000;
+n = 10000;
 data = {
     'l': l,
     'estoque': generate_fixed_vector(n, l),
