@@ -30,27 +30,27 @@ programs = [
         'runner': 'runghc',
         'input_ext': '.txt'
     },
-    {
-        'script': 'cutting-stock-problem-functionally',
-        'lang': 'javascript',
-        'extension': 'js',
-        'runner': 'node',
-        'input_ext': '.json'
-    },
-    {
-        'script': 'cutting-stock-problem-imperative',
-        'lang': 'javascript',
-        'extension': 'js',
-        'runner': 'node',
-        'input_ext': '.json'
-    }
+    # {
+    #     'script': 'cutting-stock-problem-functionally',
+    #     'lang': 'javascript',
+    #     'extension': 'js',
+    #     'runner': 'node',
+    #     'input_ext': '.json'
+    # },
+    # {
+    #     'script': 'cutting-stock-problem-imperative',
+    #     'lang': 'javascript',
+    #     'extension': 'js',
+    #     'runner': 'node',
+    #     'input_ext': '.json'
+    # }
 ]
 
 path = f'{workdir}/challenges/cutting-stock'
 
 
 l = 100
-n = 100000
+n = 190000
 data = {
     'l': l,
     'estoque': generate_fixed_vector(n, l),

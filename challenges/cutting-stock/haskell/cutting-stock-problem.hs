@@ -72,4 +72,4 @@ main = do
   let demandas = reverse $ sortOn id (head (tail vetorDeInteiros)) 
 
   let result = cutStock estoque demandas
-  putStrLn $ "O resultado é:" ++ show result
+  print result

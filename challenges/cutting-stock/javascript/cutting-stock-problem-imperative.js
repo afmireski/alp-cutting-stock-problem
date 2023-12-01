@@ -98,7 +98,7 @@ function main() {
     estoque,
     demandas
   );
-  console.log(`O total de pedidos atendidos foi ${pedidos}`);
+  console.log(pedidos);
 }
 
 main();
