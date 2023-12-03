@@ -1,3 +1,6 @@
 *.txt
 in.*
 *.csv
+*.pdf
+!resultados-oficiais.pdf
+!dataset-oficial.csv
