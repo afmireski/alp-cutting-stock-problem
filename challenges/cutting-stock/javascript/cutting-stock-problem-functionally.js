@@ -20,7 +20,6 @@ const lerEntrada = (path) => {
 };
 
 const atendeDemandaRecursiva = (l, demandas) => {
-
   const atende = (i, cutL, pedidosAtendidos) => {
     if (i >= demandas.length) return pedidosAtendidos;
 
@@ -51,15 +50,19 @@ const atendeDemandaRecursiva = (l, demandas) => {
   };
 
   return atende(0, 0, 0);
-  
-  
 };
 
 const atendeDemanda = (l, demandas) => {
   let pedidosAtendidos = 0;
-  let cutL = 0; 
+  let cutL = 0;
   let i = 0;
+
+  const start = new Date().getTime(); // Início da resolução do problema
   while (i < demandas.length) {
+    const time = new Date().getTime(); // Tempo de comparação
+
+    if ((time - start) / 1000 > 240) break; // Se demorar mais de 4 minutos para executar, para
+
     let cut = cutL + demandas[i];
     if (cut <= l) {
       demandas[i] == 0;
@@ -95,7 +98,8 @@ const cutStock = (estoque, demandas) => {
 };
 
 const main = () => {
-  const { estoque, demandas } = lerEntrada(join(__dirname, "in.json"));
+  const estoque = lerEntrada(join(__dirname, "estoque.txt"));
+  const demandas = lerEntrada(join(__dirname, "demandas.txt"));
 
   const pedidos = cutStock(estoque, demandas);
   console.log(pedidos);

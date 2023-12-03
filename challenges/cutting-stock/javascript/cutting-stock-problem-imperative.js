@@ -19,12 +19,19 @@ function lerEntrada(path) {
   }
 }
 
+
 function atendeDemanda(l, estoque, demandas) {
   let i = 0;
   let j = 0;
   let pedidosAtendidos = 0;
   let cutL = 0;
+
+  const start = new Date().getTime(); // Início da resolução do problema
   while (cutL < l && i < estoque.length && j < demandas.length) {
+    const time = new Date().getTime(); // ITempo de comporação
+
+    if (((time - start)/1000) > 240) break; // Se demorar mais de 4 minutos para executar, para
+
     let lDemanda = demandas[j];
 
     if (lDemanda > 0) {
@@ -92,7 +99,8 @@ function cutStock(estoque, demandas) {
 }
 
 function main() {
-  const { estoque, demandas } = lerEntrada(join(__dirname, "in.json"));
+  const estoque = lerEntrada(join(__dirname, "estoque.txt"));
+  const demandas = lerEntrada(join(__dirname, "demandas.txt"));
 
   const pedidos = cutStock(
     estoque,

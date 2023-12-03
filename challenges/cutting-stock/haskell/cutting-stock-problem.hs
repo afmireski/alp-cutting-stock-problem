@@ -64,12 +64,15 @@ cutStock (l: es) demandas = atendeDemanda l demandas
 main :: IO ()
 main = do
   diretorioAtual <- getCurrentDirectory
-  let caminhoDoArquivo = diretorioAtual ++ "/challenges/cutting-stock/haskell/in.txt"
-  vetorDeInteiros <- lerArquivo caminhoDoArquivo
-  let estoque = head vetorDeInteiros
+  let caminhoEstoque = diretorioAtual ++ "/haskell/estoque.txt"
+  vetorEstoque <- lerArquivo caminhoEstoque
+  let estoque = head vetorEstoque
+
+  let caminhoDemandas = diretorioAtual ++ "/haskell/estoque.txt"
+  vetorDemandas <- lerArquivo caminhoDemandas
 
   -- Atendendo todos os maiores pedidos primeiros é para haver menos desperdício.
-  let demandas = reverse $ sortOn id (head (tail vetorDeInteiros)) 
+  let demandas = reverse $ sortOn id (head vetorDemandas) 
 
   let result = cutStock estoque demandas
   print result
