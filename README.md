@@ -30,7 +30,7 @@ ghci q<n>.hs # Escolher arquivo que será carregado
 Já os desafios são mais elaborados, como eles exigem a montagem de um gráfico com os resultados das três execuções, foi criado um script em python que gera as entradas necessárias e testa as três abordagens para cada um dos três tempos de execução:
 1. ~1s
 2. ~10s
-3. ~1 min
+3. ~1 min  
 Esses casos são baseados no tempo de execução da Haskell.
 Após cada execução o tempo decorrido é calculado e utilizado para montar um gráfico para as três linguagens.
 
