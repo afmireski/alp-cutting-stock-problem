@@ -74,8 +74,7 @@ subprocess.run(['clang', 'generate-rand-vector.c', '-o', 'generate-rand-vector']
 #     data = generate_random_vector(n)    
 #     writeInputFiles(n)      
 #     end_time = time.time()
-#     delta = end_time - start_time      
-#     print(delta)
+#     delta = end_time - start_time
 
 size = len(elements) * len(programs)
 datasets = []
