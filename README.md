@@ -32,7 +32,7 @@ Já os desafios são mais elaborados, como eles exigem a montagem de um gráfico
 2. ~10s
 3. ~1 min  
 Esses casos são baseados no tempo de execução da Haskell.
-Após cada execução o tempo decorrido é calculado e utilizado para montar um gráfico para as três linguagens.
+Após cada execução o tempo decorrido é calculado e utilizado para montar um gráfico para as três implementações.
 
 ### Instalando dependências
 Os gráficos são montados utilizando três bibliotecas do python: `matplotlib`, `pandas` e `seaborn`, caso precise instalá-las:
