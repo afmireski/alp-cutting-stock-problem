@@ -49,7 +49,7 @@ atendeDemanda l demandas =
       | otherwise = atendeDemanda' l (cutL + m) (removeDemanda m dems) (atendidos +1)
       where
         delta = l - cutL
-        list = takeWhile (<= delta) dems
+        list = dropWhile (> delta) dems
         m = if null list then 0 else maximum list
     removeDemanda :: Int -> Demandas -> Demandas
     removeDemanda _ [] = []

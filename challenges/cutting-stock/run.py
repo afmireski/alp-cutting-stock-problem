@@ -80,22 +80,22 @@ programs = [
         'label': 'Haskell',
         'input_ext': '.txt'
     },
-    {
-        'script': 'cutting-stock-problem-imperative',
-        'lang': 'javascript',
-        'extension': 'js',
-        'runner': 'node',
-        'label': 'JS-Imp',
-        'input_ext': '.json'
-    },
-    {
-        'script': 'cutting-stock-problem-functionally',
-        'lang': 'javascript',
-        'extension': 'js',
-        'runner': 'node',
-        'label': 'JS-Fun',
-        'input_ext': '.json'
-    }
+    # {
+    #     'script': 'cutting-stock-problem-imperative',
+    #     'lang': 'javascript',
+    #     'extension': 'js',
+    #     'runner': 'node',
+    #     'label': 'JS-Imp',
+    #     'input_ext': '.json'
+    # },
+    # {
+    #     'script': 'cutting-stock-problem-functionally',
+    #     'lang': 'javascript',
+    #     'extension': 'js',
+    #     'runner': 'node',
+    #     'label': 'JS-Fun',
+    #     'input_ext': '.json'
+    # }
 ]
 
 
